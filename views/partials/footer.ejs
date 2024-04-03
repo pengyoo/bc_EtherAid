@@ -297,8 +297,8 @@
   $(function () {
     if (localStorage.getItem(ACCOUNT) && localStorage.getItem(ACCOUNT) != "undefined") {
       $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
-      $("#avatar").show();
       $("#connectBtn").hide();
+      $("#avatar").show(); 
     } else {
       $("#avatar").hide();
       $("#connectBtn").show();

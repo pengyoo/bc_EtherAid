@@ -14,7 +14,7 @@
       </div>
 
       <div class="col-lg-3">
-        <div class="card text-white position-fixed">
+        <div class="card text-white sticky-top">
           <div class="card-header bg-primary">Funded (ETH)</div>
           <div id="funded" class="text-secondary text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
           <div class="card-header bg-primary">Target (ETH)</div>
@@ -99,6 +99,11 @@
       // Handle Fund
       const handleFund = (event) => {
         event.preventDefault();
+        if(!localStorage.getItem(ACCOUNT)){
+          $("#toast-body").html("Please connect to your wallet first!");
+          toastBootstrap.show();
+          return;
+        }
         value = $("#value").val() * 1000000000000000000;
         if($("#value").val() < 0.01) {
           $("#toast-body").html("Amount should more than or equal to 0.01!");

@@ -3,33 +3,22 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Welcome to Web3 BootStrap App', name: null });
+  res.render('index', { title: 'Home | EtherAid' });
 });
 
-router.post('/', function (req, res, next) {
-
-  res.render('index', { title: 'Welcome to Web3 BootStrap App', name: req.body.name });
-});
-
-
-
+/* GET address page. */
 router.get('/address', function (req, res, next) {
-  res.render('address', { title: 'Welcome to Web3 BootStrap App', name: null });
+  res.render('address', { title: 'Address | EtherAid' });
 });
 
-router.get('/web3', function (req, res, next) {
-  res.render('web3', { title: 'Welcome to Web3 BootStrap App', name: null });
-});
-
+/* GET create project page. */
 router.get('/create', function (req, res, next) {
-  res.render('create', { title: 'Welcome to Web3 BootStrap App', name: null });
+  res.render('create', { title: 'Start a project | EtherAid' });
 });
 
-
-
-
+/* GET about page. */
 router.get('/about', function (req, res, next) {
-  res.render('about', { title: 'Welcome to Web3 BootStrap App', name: null });
+  res.render('about', { title: 'About | EtherAid' });
 });
 
 
