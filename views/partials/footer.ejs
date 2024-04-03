@@ -21,7 +21,7 @@
           </svg></a></li>
     </ul>
   </footer>
-  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+  <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
     <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <strong class="me-auto">Notification</strong>
@@ -53,13 +53,15 @@
 
   // Connect to wallet function
   $("#connectBtn").click(async () => {
-    if (window.ethereum !== "underfined") {
+    if (window.ethereum) {
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
       localStorage.setItem("account", accounts[0]);
       $("#connectBtn").hide();
       $("#wallet").html(`User Account: ${accounts[0]}`);
       $("#avatar").show();
-
+    } else {
+      $("#toast-body").html("Please install a wallet extention. We recommend MetaMask.");
+      toastBootstrap.show();
     }
   })
 
