@@ -1,0 +1,90 @@
+<%- include('partials/header.ejs') %>
+  <div class="container mt-3">
+    <div class="row">
+      
+      <div class="col-lg-9">
+        <div id="project_card">
+         
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card text-white position-fixed">
+          <div class="card-header bg-primary">Fund Me</div>
+          <form class="p-3" method="post" onsubmit="handleFund(event)">
+            <div class="input-group">
+              <span class="input-group-text">ETH</span>
+              <input id="value" name="value" type="number" step=".01" class="form-control" aria-label="Amount">
+            </div>
+            <button class="btn btn-primary w-100 mt-3" type="submit">Fund</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <%- include('partials/footer.ejs') %>
+    <script>
+
+
+      const PROJECTS = "projects";
+
+      // fund eth through blockchain
+      const fund = (value) => {
+        const data = window.contract.methods.donate(<%- id %>).send({ from: localStorage.getItem("account"), value: value }).then(result => {
+          $("#value").val(null);
+          $("#toast-body").html("Funded successfully! Thank you!");
+          toastBootstrap.show();
+        });
+		  }
+
+      const displayProject = (id) => {
+        projects = JSON.parse(localStorage.getItem(PROJECTS));
+        for (i = 0; i < projects.length; i++) {
+          if (i == id) {
+            project_html = `
+            <div class="card card-cover object-fit-fill h-100 p-3">
+              <h4 class="display-6 lh-1 fw-bold">${projects[i].title}</h4>
+              <img class="mt-3" src="${projects[i].image}" />
+                <ul class="d-flex list-unstyled mt-3 text-white" style="font-weight: bolder;" >
+                  <li class="me-auto">
+                    <small>
+                      <span class="badge rounded-pill bg-warning" style="font-size:14px; font-weight:bolder;">
+                        <stong>${web3.utils.fromWei(projects[i].collected, 'ether')} funded / target ${web3.utils.fromWei(projects[i].target, 'ether')}</strong>
+                           ETH</span></small>
+                  </li>
+                 
+                  <li class="d-flex align-items-center"> 
+                    <small>
+                      <span style="font-size:14px; font-weight:bolder; color:gray;">
+                      Deadline: ${new Date(parseInt(projects[i].deadline)).toLocaleDateString()}
+                      </span>
+                    </small>
+                  </li>
+                </ul>
+              <div>
+                ${projects[i].description}
+              </div>
+            </div>
+          `;
+            $("#project_card").append(project_html);
+            return;
+          }
+        }
+      }
+
+      // Handle Fund
+      const handleFund = (event) => {
+        event.preventDefault();
+        value = $("#value").val() * 1000000000000000000;
+        fund(value);
+      }
+      $(async function () {
+        //Connect to contract
+        await connectContract();
+
+        displayProject(<%- id %>);
+      })
+
+    </script>

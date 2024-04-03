@@ -1,0 +1,292 @@
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24">
+          <use xlink:href="#bootstrap"></use>
+        </svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Peng Yu</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+            <use xlink:href="#twitter"></use>
+          </svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+            <use xlink:href="#instagram"></use>
+          </svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+            <use xlink:href="#facebook"></use>
+          </svg></a></li>
+    </ul>
+  </footer>
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Notification</strong>
+        <small>just now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toast-body" class="toast-body">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.7.0/web3.min.js"
+  integrity="sha512-Fb4046VCVYeHkcOot1tILxjEvhotfjmk2Zo54zEJopE4BskdPALUvjzjnOttxbZ/WlvKUOgCHTHy42Z5OxRaHw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  // Convert BitInt to string
+  BigInt.prototype.toJSON = function () { return this.toString() }
+
+  //Initialize Notification
+  const toastLiveExample = document.getElementById('liveToast');
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+
+  // Connect to wallet function
+  $("#connectBtn").click(async () => {
+    if (window.ethereum !== "underfined") {
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      localStorage.setItem("account", accounts[0]);
+      $("#connectBtn").hide();
+      $("#wallet").html(`User Account: ${accounts[0]}`);
+      $("#avatar").show();
+
+    }
+  })
+
+  // Connect to contract
+  const connectContract = async () => {
+    const ABI = [
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "_title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_target",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_deadline",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_image",
+            "type": "string"
+          }
+        ],
+        "name": "create",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "donate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "getDonators",
+        "outputs": [
+          {
+            "internalType": "address[]",
+            "name": "",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "",
+            "type": "uint256[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getProjects",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "target",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "collected",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "image",
+                "type": "string"
+              },
+              {
+                "internalType": "address[]",
+                "name": "donators",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "donations",
+                "type": "uint256[]"
+              }
+            ],
+            "internalType": "struct CrowdFunding.Project[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "numberOfProjects",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "projects",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "target",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collected",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "image",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+    const Address = "0x3c45575560E196Fa12fe4Bf39d42DbeaC1aaDEaE";
+    window.web3 = await new Web3(window.ethereum);
+    window.contract = await new window.web3.eth.Contract(ABI, Address);
+  }
+
+  // Initilize
+  $(function () {
+    if (localStorage.getItem("account") && localStorage.getItem("account") != "undefined") {
+      $("#wallet").html(`User Account: ${localStorage.getItem("account")}`);
+      $("#avatar").show();
+      $("#connectBtn").hide();
+    } else {
+      $("#avatar").hide();
+      $("#connectBtn").show();
+    }
+
+    
+  })
+</script>
+</body>
+
+</html>
