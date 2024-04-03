@@ -103,6 +103,11 @@
       const handleFund = (event) => {
         event.preventDefault();
         value = $("#value").val() * 1000000000000000000;
+        if($("#value").val() < 0.01) {
+          $("#toast-body").html("Amount should more than or equal to 0.01!");
+          toastBootstrap.show();
+          return;
+        }
         fund(value);
       }
       $(async function () {
