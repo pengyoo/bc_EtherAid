@@ -275,6 +275,13 @@
     window.contract = await new window.web3.eth.Contract(ABI, Address);
   }
 
+  const scrollToAnchor = (anchorId) => {
+    var anchor = document.getElementById(anchorId);
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   // Initilize
   $(function () {
     if (localStorage.getItem("account") && localStorage.getItem("account") != "undefined") {
@@ -285,9 +292,8 @@
       $("#avatar").hide();
       $("#connectBtn").show();
     }
-
-    
   })
+
 </script>
 </body>
 
