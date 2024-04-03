@@ -54,7 +54,7 @@
 
   // Validate url
   const isValidUrl = (url) => {
-    var urlRegex = /^(https?:\/\/)?([\w\d]+\.)+[\w\d]{2,}(\/[\w\d]+)*\/?$/;
+    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
     return urlRegex.test(url);
   }
 
@@ -103,7 +103,6 @@
           toastBootstrap.show();
           return;
         }
-
         if(!project['image'] || !isValidUrl(project['image'])) {
           $("#toast-body").html("Invalid image url!");
           toastBootstrap.show();

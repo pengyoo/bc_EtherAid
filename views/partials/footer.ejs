@@ -45,6 +45,8 @@
   // Convert BitInt to string
   BigInt.prototype.toJSON = function () { return this.toString() }
 
+  var PROJECTS = "projects";
+
   //Initialize Notification
   const toastLiveExample = document.getElementById('liveToast');
   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);

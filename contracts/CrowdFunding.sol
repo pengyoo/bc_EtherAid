@@ -50,6 +50,10 @@ contract CrowdFunding {
         uint256 amount = msg.value;
 
         Project storage project = projects[_id];
+        require(
+            project.deadline < block.timestamp,
+            "This project has expired."
+        );
 
         project.donators.push(msg.sender);
         project.donations.push(amount);

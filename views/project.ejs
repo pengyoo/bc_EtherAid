@@ -36,9 +36,6 @@
   <%- include('partials/footer.ejs') %>
     <script>
 
-
-      const PROJECTS = "projects";
-
       // fund eth through blockchain
       const fund = (value) => {
         window.contract.methods.donate(<%- id %>).send({ from: localStorage.getItem("account"), value: value }).then(result => {
