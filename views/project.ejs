@@ -38,7 +38,7 @@
 
       // fund eth through blockchain
       const fund = (value) => {
-        window.contract.methods.donate(<%- id %>).send({ from: localStorage.getItem("account"), value: value }).then(result => {
+        window.contract.methods.donate(<%- id %>).send({ from: localStorage.getItem(ACCOUNT), value: value }).then(result => {
           $("#value").val(null);
           $("#toast-body").html("Funded successfully! Thank you!");
           toastBootstrap.show();

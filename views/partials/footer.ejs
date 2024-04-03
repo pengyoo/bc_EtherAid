@@ -46,6 +46,7 @@
   BigInt.prototype.toJSON = function () { return this.toString() }
 
   var PROJECTS = "projects";
+  var ACCOUNT = "account";
 
   //Initialize Notification
   const toastLiveExample = document.getElementById('liveToast');
@@ -55,7 +56,7 @@
   $("#connectBtn").click(async () => {
     if (window.ethereum) {
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      localStorage.setItem("account", accounts[0]);
+      localStorage.setItem(ACCOUNT, accounts[0]);
       $("#connectBtn").hide();
       $("#wallet").html(`User Account: ${accounts[0]}`);
       $("#avatar").show();
@@ -294,8 +295,8 @@
 
   // Initilize
   $(function () {
-    if (localStorage.getItem("account") && localStorage.getItem("account") != "undefined") {
-      $("#wallet").html(`User Account: ${localStorage.getItem("account")}`);
+    if (localStorage.getItem(ACCOUNT) && localStorage.getItem(ACCOUNT) != "undefined") {
+      $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
       $("#avatar").show();
       $("#connectBtn").hide();
     } else {
