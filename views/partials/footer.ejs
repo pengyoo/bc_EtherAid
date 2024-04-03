@@ -271,7 +271,15 @@
       }
     ];
     const Address = "0x3c45575560E196Fa12fe4Bf39d42DbeaC1aaDEaE";
-    window.web3 = await new Web3(window.ethereum);
+    
+    if(window.ethereum) {
+      window.web3 = await new Web3(window.ethereum);
+    } else {
+      // if a user doesn't install MetaMask, use alchemy provider
+      const alchemyApiKey = 'erzlaDNMdBp4UwWxOsc6mwNAmTpPH-by';
+      const alchemyHttpUrl = `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`;
+      window.web3 = new Web3(alchemyHttpUrl);
+    }
     window.contract = await new window.web3.eth.Contract(ABI, Address);
   }
 
