@@ -18,10 +18,20 @@ contract CrowdFunding {
 
     uint256 public numberOfProjects = 0;
 
-    function create(address _owner, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _image) public returns (uint256) {
-        Project storage project = projects[numberOfProjects];
+    function create(
+        address _owner,
+        string memory _title,
+        string memory _description,
+        uint256 _target,
+        uint256 _deadline,
+        string memory _image
+    ) public returns (uint256) {
+        require(
+            _deadline < block.timestamp,
+            "The deadline should be a date in the future."
+        );
 
-        require(project.deadline < block.timestamp, "The deadline should be a date in the future.");
+        Project storage project = projects[numberOfProjects];
 
         project.owner = _owner;
         project.title = _title;
@@ -44,21 +54,23 @@ contract CrowdFunding {
         project.donators.push(msg.sender);
         project.donations.push(amount);
 
-        (bool sent,) = payable(project.owner).call{value: amount}("");
+        (bool sent, ) = payable(project.owner).call{value: amount}("");
 
-        if(sent) {
+        if (sent) {
             project.collected = project.collected + amount;
         }
     }
 
-    function getDonators(uint256 _id) view public returns (address[] memory, uint256[] memory) {
+    function getDonators(
+        uint256 _id
+    ) public view returns (address[] memory, uint256[] memory) {
         return (projects[_id].donators, projects[_id].donations);
     }
 
     function getProjects() public view returns (Project[] memory) {
         Project[] memory allProjects = new Project[](numberOfProjects);
 
-        for(uint i = 0; i < numberOfProjects; i++) {
+        for (uint i = 0; i < numberOfProjects; i++) {
             Project storage item = projects[i];
 
             allProjects[i] = item;
