@@ -18,7 +18,7 @@
           <div class="card-header bg-primary">Funded (ETH)</div>
           <div id="funded" class="text-warning text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
           <div class="card-header bg-primary">Target (ETH)</div>
-          <div id="target" class="text-danger text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
+          <div id="target" class="text-success text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
           <div class="card-header bg-primary">Fund Me</div>
           <form class="p-3" method="post" onsubmit="handleFund(event)">
             <div class="input-group">
@@ -58,7 +58,7 @@
             <ul class="list-group">
               <li class="list-group-item">
                 <div class="d-flex align-items-center">
-                  <div><a class="nav-link" target="_blank" href="https://sepolia.etherscan.io/address/${donators[i]}"><span style="font-size:14px; font-weight:bolder; color:gray;">${donators[i]}</span></a></div>&nbsp; funded &nbsp; <div>${web3.utils.fromWei(donations[i], 'ether')} ETH</div>
+                  <div class="text-danger" style="font-weight:bolder; font-size:16px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">${web3.utils.fromWei(donations[i], 'ether')}</div>&nbsp;ETH  from&nbsp; <div><a class="nav-link" target="_blank" href="https://sepolia.etherscan.io/address/${donators[i]}"><span style="font-size:14px; font-weight:bolder; color:gray;">${donators[i]}</span></a></div>
                 </div>
               </li>
           </ul>
