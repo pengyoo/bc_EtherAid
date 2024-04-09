@@ -42,15 +42,26 @@
   integrity="sha512-Fb4046VCVYeHkcOot1tILxjEvhotfjmk2Zo54zEJopE4BskdPALUvjzjnOttxbZ/WlvKUOgCHTHy42Z5OxRaHw=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+
+
   // Convert BitInt to string
   BigInt.prototype.toJSON = function () { return this.toString() }
 
+  // Global Constants
   var PROJECTS = "projects";
   var ACCOUNT = "account";
 
   //Initialize Notification
   const toastLiveExample = document.getElementById('liveToast');
   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+
+
+  // Use API to get ETH Price
+  var ethPrice;
+  const getEthPrice = async () => {
+    const data = await $.get("https://api.blockchain.com/v3/exchange/tickers/ETH-EUR");
+    ethPrice = data.price_24h;
+  }
 
   // Connect to wallet function
   $("#connectBtn").click(async () => {
@@ -286,6 +297,7 @@
     window.contract = await new window.web3.eth.Contract(ABI, Address);
   }
 
+  // Scroll screen
   const scrollToAnchor = (anchorId) => {
     var anchor = document.getElementById(anchorId);
     if (anchor) {
@@ -294,7 +306,7 @@
   }
 
   // Initilize
-  $(function () {
+  $(async function () {
     if (localStorage.getItem(ACCOUNT) && localStorage.getItem(ACCOUNT) != "undefined") {
       $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
       $("#connectBtn").hide();

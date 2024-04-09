@@ -18,18 +18,24 @@
       </div>
     </div>
     <h1 class="text-center my-3">Latest Projects</h1>
+    <div id="spinner" class="col-lg-12 text-center my-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden ">Loading...</span>
+      </div>
+    </div>
     <div id="project_cards" class="row row-cols-1 row-cols-lg-3 align-items-stretch g-3">
+      
     </div>
   </div>
 
   <%- include('partials/footer.ejs') %>
     <script>
-
+     
       // Get projects from blockchain and display it
       const getProjects = async () => {
+        $("#spinner").show();
         const projects = await window.contract.methods.getProjects().call();
         localStorage.setItem(PROJECTS, JSON.stringify(projects));
-
       }
 
       // Display projects
@@ -49,8 +55,8 @@
                   <li class="me-auto">
                     <small>
                       <span class="badge rounded-pill bg-secondary" style="font-size:14px; font-weight:bolder;">
-                        ${web3.utils.fromWei(projects[i].collected, 'ether')} ETH Funded / Target ${web3.utils.fromWei(projects[i].target, 'ether')}
-                           ETH</span></small>
+                        ${web3.utils.fromWei(projects[i].collected, 'ether')} ETH Funded / Target ${web3.utils.fromWei(projects[i].target, 'ether')} ETH
+                           </span></small>
                   </li>
                  
                   <li class="d-flex align-items-center"> 
@@ -69,14 +75,14 @@
           `;
           $("#project_cards").append(project_html);
         }
+        $("#spinner").hide();
       }
-
 
       $(async function () {
         //Connect to contract
         await connectContract();
 
-        //Display Projects
+        //Get and display projects
         await getProjects();
         displayProjects();
       })

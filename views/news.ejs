@@ -1,0 +1,37 @@
+<%- include('partials/header.ejs') %>
+<div class="container">
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <% for(var i = 0; i < news.length; i++) { %>
+      <div class="col">
+        <div class="card shadow-sm">
+          <img class="bd-placeholder-img card-img-top" src="<%= news[i].images.thumbnailProxied %>" width="100%" height="225"/>
+          <div class="card-body">
+            <p class="card-text"><%= news[i].title %></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+              </div>
+              <small class="text-body-secondary">9 mins</small>
+            </div>
+          </div>
+        </div>
+    </div>
+    <% } %>
+   
+  </div>
+</div>
+
+  <%- include('partials/footer.ejs') %>
+    <script>
+      $(async function () {
+        //Connect to contract
+        await connectContract();
+
+        //Get and display projects
+        await getProjects();
+        displayProjects();
+      })
+
+    </script>

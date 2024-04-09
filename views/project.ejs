@@ -16,14 +16,22 @@
       <div class="col-lg-3">
         <div class="card text-white sticky-top">
           <div class="card-header bg-primary">Funded (ETH)</div>
-          <div id="funded" class="text-secondary text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
+          <div class="d-flex justify-content-center align-items-baseline">
+            <div id="funded" class="text-secondary" style="font-size: 3rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
+            <div id="fundedInEUR" class="text-warning ms-2" style="font-size: 1.5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif"></div>
+          </div>
           <div class="card-header bg-primary">Target (ETH)</div>
-          <div id="target" class="text-success text-center" style="font-size: 5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
+          <div class="d-flex justify-content-center align-items-baseline">
+            <div id="target" class="text-success" style="font-size: 3rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">0</div>
+            <div id="targetInEUR" class="text-warning  ms-2" style="font-size: 1.5rem; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif"></div>
+          </div>
+          
           <div class="card-header bg-primary">Fund Me</div>
           <form class="p-3" method="post" onsubmit="handleFund(event)">
             <div class="input-group">
               <span class="input-group-text">ETH</span>
               <input id="value" name="value" type="number" step=".01" class="form-control" aria-label="Amount">
+              <span id="fundInEuro" class="input-group-text">0 EUR</span>
             </div>
             <button class="btn btn-danger w-100 mt-3" type="submit">Fund</button>
           </form>
@@ -87,7 +95,8 @@
             $("#project_card").append(project_html);
             $("#funded").text(web3.utils.fromWei(projects[i].collected, 'ether'));
             $("#target").text(web3.utils.fromWei(projects[i].target, 'ether'));
-
+            $("#fundedInEUR").text(" ≈ " + Math.round(web3.utils.fromWei(projects[i].collected, 'ether') * ethPrice) + " EUR")
+            $("#targetInEUR").text(" ≈ " + Math.round(web3.utils.fromWei(projects[i].target, 'ether') * ethPrice) + " EUR")
             // Load donations
             getDonations();
             return;
@@ -95,6 +104,10 @@
         }
         
       }
+
+      $("#value").change(function(){
+        $("#fundInEuro").text(Math.round($("#value").val() * ethPrice) + " EUR");
+      });
 
       // Handle Fund
       const handleFund = (event) => {
@@ -115,6 +128,9 @@
       $(async function () {
         //Connect to contract
         await connectContract();
+
+        // Get Ether price
+        await getEthPrice();
 
         displayProject(<%- id %>);
       })
