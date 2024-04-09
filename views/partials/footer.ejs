@@ -50,6 +50,7 @@
   // Global Constants
   var PROJECTS = "projects";
   var ACCOUNT = "account";
+  var ACCOUNTS = "accounts"
 
   //Initialize Notification
   const toastLiveExample = document.getElementById('liveToast');
@@ -67,9 +68,16 @@
   $("#connectBtn").click(async () => {
     if (window.ethereum) {
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      localStorage.setItem(ACCOUNTS, JSON.stringify(accounts));
       localStorage.setItem(ACCOUNT, accounts[0]);
+      $("#activeAccount").text(accounts[0].substring(accounts[0].length - 3).toUpperCase());
+      
+      // Display accounts
+      for(i=0; i<accounts.length; i++) {
+        $("#wallet").append(`<li><a role="button" onclick="switchAccount('${accounts[i]}')" class="dropdown-item" href="#">${accounts[i]}</a></li>`)
+      }
       $("#connectBtn").hide();
-      $("#wallet").html(`User Account: ${accounts[0]}`);
+      // $("#wallet").html(`User Account: ${accounts[0]}`);
       $("#avatar").show();
     } else {
       $("#toast-body").html("Please install a wallet extention. We recommend MetaMask.");
@@ -77,6 +85,11 @@
     }
   })
 
+  // Switch Account
+  const switchAccount = (account) => {
+    localStorage.setItem(ACCOUNT, account);
+    $("#activeAccount").text(account.substring(account.length - 3).toUpperCase());
+  }
   // Connect to contract
   const connectContract = async () => {
 
@@ -512,8 +525,15 @@
 
   // Initilize
   $(async function () {
-    if (localStorage.getItem(ACCOUNT) && localStorage.getItem(ACCOUNT) != "undefined") {
-      $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
+    if (localStorage.getItem(ACCOUNTS) && localStorage.getItem(ACCOUNTS) != "undefined") {
+      // Display accounts
+      const accounts = JSON.parse(localStorage.getItem(ACCOUNTS));
+      for(i=0; i<accounts.length; i++) {
+        const a = accounts[i]
+        $("#wallet").append(`<li><a role="button" onclick="switchAccount('${a}')" class="dropdown-item" href="#">${accounts[i]}</a></li>`)
+      }
+      $("#activeAccount").text(localStorage.getItem(ACCOUNT).substring(localStorage.getItem(ACCOUNT).length - 3).toUpperCase());
+      // $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
       $("#connectBtn").hide();
       $("#avatar").show(); 
     } else {

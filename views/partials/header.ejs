@@ -18,6 +18,24 @@
     min-height: 2em;
     text-overflow: ellipsis;
   }
+
+  .avatar {
+    --bs-avatar-width: 32px;
+    --bs-avatar-bg: var(--ds-background-neutral-bold);
+    position: relative;
+    width: var(--bs-avatar-width);
+    height: var(--bs-avatar-width);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-text-inverse);
+    line-height: 1;
+    font-size: 14px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    background-color: var(--bs-avatar-bg);
+}
   </style>
 </head>
 
@@ -55,14 +73,9 @@
         <div id="avatar" class="dropdown text-end">
           <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-              class="bi bi-person-circle" viewBox="0 0 16 16">
-              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-              <path fill-rule="evenodd"
-                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-            </svg> </a>
-          <ul class="dropdown-menu text-small">
-            <li><a id="wallet" class="dropdown-item" href="#"></a></li>
+            <span id="activeAccount" class="avatar text-bg-primary border border-light"></span></a>
+          <ul id="wallet" class="dropdown-menu text-small" style="z-index: 1100;">
+            
           </ul>
         </div>
       </div>
