@@ -107,7 +107,7 @@
 
     // Create Project through smart contract
     const createProject = (title, description, target, deadline, image) => {
-      const data = window.contract.methods.create(localStorage.getItem(ACCOUNT), title, description, target, deadline, image).send({ from: localStorage.getItem(ACCOUNT) }).then((result) => {
+      const data = window.contract.methods.create(title, description, target, deadline, image).send({ from: localStorage.getItem(ACCOUNT) }).then((result) => {
         window.location.href = "/";
       });
     }

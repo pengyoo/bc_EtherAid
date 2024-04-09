@@ -42,14 +42,15 @@
       const displayProjects = () => {
         projects = JSON.parse(localStorage.getItem(PROJECTS))
         // TODO: i should be >= 0, but here just want to skip first test data as it's ugly.
-        for (i = projects.length - 1; i > 0; i--) {
+        for (i = projects.length - 1; i >= 0; i--) {
+          
           project_html = `
           
           <div class="col">
             <a href="/projects/${i}" class="nav-link">
             <div class="card card-cover object-fit-fill h-100 overflow-hidden text-bg-dark"
               style="border:none; background-image: url('${projects[i].image}'); background-size: cover;">
-              <div class="d-flex flex-column h-100 p-3 pb-3 text-white text-shadow-1">
+              <div class="d-flex flex-column h-100 p-2 pb-2 text-white text-shadow-1">
                 <h4 class="title pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" style="text-shadow: 2px 2px 4px #000000;">${projects[i].title}</h4>
                 <ul class="d-flex list-unstyled mt-auto" style="font-weight: bolder;" >
                   <li class="me-auto">

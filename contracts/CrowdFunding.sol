@@ -19,21 +19,20 @@ contract CrowdFunding {
     uint256 public numberOfProjects = 0;
 
     function create(
-        address _owner,
         string memory _title,
         string memory _description,
         uint256 _target,
         uint256 _deadline,
         string memory _image
     ) public returns (uint256) {
+        Project storage project = projects[numberOfProjects];
+
         require(
-            _deadline < block.timestamp,
+            project.deadline < block.timestamp,
             "The deadline should be a date in the future."
         );
 
-        Project storage project = projects[numberOfProjects];
-
-        project.owner = _owner;
+        project.owner = msg.sender;
         project.title = _title;
         project.description = _description;
         project.target = _target;
@@ -50,10 +49,6 @@ contract CrowdFunding {
         uint256 amount = msg.value;
 
         Project storage project = projects[_id];
-        require(
-            project.deadline < block.timestamp,
-            "This project has expired."
-        );
 
         project.donators.push(msg.sender);
         project.donations.push(amount);
