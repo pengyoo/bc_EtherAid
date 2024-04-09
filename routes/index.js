@@ -1,6 +1,7 @@
 var express = require('express');
 var axios = require('axios');
 var router = express.Router();
+const moment = require('moment');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -13,24 +14,19 @@ router.get('/news', async function (req, res, next) {
 
   const options = {
     method: 'GET',
-    url: 'https://google-news13.p.rapidapi.com/latest',
-    params: { lr: 'en-US' },
-    headers: {
-      'X-RapidAPI-Key': '108f64079bmshe074fe22625578bp1bd533jsn6eb95e1e42ac',
-      'X-RapidAPI-Host': 'google-news13.p.rapidapi.com'
-    }
+    url: 'https://gnews.io/api/v4/search?q=crypto&lang=en&max=9&apikey=3a14b5b9e71aa27514f118eebe9e76d8',
   };
 
   let news;
 
   try {
     response = await axios.request(options);
-    news = response.data.items;
+    news = response.data.articles;
     console.log(news);
   } catch (error) {
     console.error(error);
   }
-  res.render('news', { title: 'News | EtherAid', "news": news });
+  res.render('news', { title: 'News | EtherAid', "news": news, moment });
 });
 
 /* GET address page. */

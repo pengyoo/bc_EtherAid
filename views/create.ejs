@@ -12,15 +12,21 @@
     <main class="form-post w-100 m-auto mt-3 p-4 card">
       <h3>Create a project...</h3>
       <form id="project_from" method="post" onsubmit="handleSubmit(event)" class="mt-2">
-        <div class="form-floating">
+        
+        <div class="d-flex mt-3">
+            
+          <img id="img_display" style="width: 300px;" src="/images/placeholder.jpg" />
+          <div class="ms-3">
+            <input onchange="pinFileToIPFS()" type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg" required>
+            <div id="loadingSpinner" style="display: none;" class="spinner-border text-primary mt-3" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-floating mt-3">
           <input type="text" class="form-control" id="title" name="title" placeholder="title" required>
           <label for="title">Title</label>
         </div>
-        <!-- <div class="form-floating mt-3">
-          <img id="img_display" style="width: 100px; display: none;" />
-          <input onchange="uploadToIPFS()" type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg" required>
-          <label for="image">Image</label>
-        </div> -->
         <label class="mt-3">Description</label>
         <div class="form-floating" >
           <textarea style="display:none" rows="5" id="description" name="description" class="w-100 mt-3 p-2 pt-4"
@@ -40,10 +46,7 @@
           <label for="deadline">Deadline</label>
         </div>
 
-        <div class="form-floating mt-3">
-          <input type="text" class="form-control" id="image" name="image" placeholder="" required>
-          <label for="image">Image</label>
-        </div>
+        <input type="hidden" class="form-control" id="projectImage" name="projectImage" placeholder="" required>
         <button class="btn btn-primary w-100 py-2 my-3" type="submit">Create</button>
       </form>
       
@@ -53,86 +56,118 @@
   <%- include('partials/footer.ejs') %>
   <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
   <script>
-    $(async function(){
-      const quill = new Quill('#editor', {
-        theme: 'snow'
-      });
-    })
+    const quill = new Quill('#editor', {
+          theme: 'snow'
+    });
+
     
+    // Upload image to IPFS using Pinata
+    const JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI2NDBlNzdhMi1iMzE0LTQwNzItYjI5OC0wMDE1OTM1YWRlZGQiLCJlbWFpbCI6InlwMTk5MEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMThhOTdlMjhkY2ZmZGM2ZjA4MmMiLCJzY29wZWRLZXlTZWNyZXQiOiI0MzUxMGVhODA5MTc0ZDBkMDExMjdhNmQ5ZTIxZjg1MmU3NDhkYTBmYmQxZjdjZWJmNmUwOTZkYmUyYWZkZmMxIiwiaWF0IjoxNzEyNjY5NzI2fQ.HM2JL53Kd-GeYio36eRLA_KWLhArZTmaky9ULZKFPAE";
+    const gateway = "https://apricot-fascinating-spider-288.mypinata.cloud/ipfs/"
+    const pinFileToIPFS = async () => {
+      $("#loadingSpinner").show();
+      try {
+        const formData = new FormData();
+        const file = $("#image")[0].files[0];
+        formData.append("file", file);
 
-  // Validate url
-  const isValidUrl = (url) => {
-    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-    return urlRegex.test(url);
-  }
-
-
-
-      // Create Project through smart contract
-      const createProject = (title, description, target, deadline, image) => {
-        const data = window.contract.methods.create(localStorage.getItem(ACCOUNT), title, description, target, deadline, image).send({ from: localStorage.getItem(ACCOUNT) }).then((result) => {
-          window.location.href = "/";
+        const pinataMetadata = JSON.stringify({
+          name: file.name,
         });
+        formData.append("pinataMetadata", pinataMetadata);
+
+        const pinataOptions = JSON.stringify({
+          cidVersion: 0,
+        });
+        formData.append("pinataOptions", pinataOptions);
+
+        const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${JWT}`,
+          },
+          body: formData,
+        });
+        const resData = await res.json();
+        $("#projectImage").val(gateway + resData.IpfsHash);
+        $("#img_display").attr("src", gateway + resData.IpfsHash).show();
+        $("#loadingSpinner").hide();
+        // console.log(resData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    
+    // Validate url
+    const isValidUrl = (url) => {
+      const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+      return urlRegex.test(url);
+    }
+
+    // Create Project through smart contract
+    const createProject = (title, description, target, deadline, image) => {
+      const data = window.contract.methods.create(localStorage.getItem(ACCOUNT), title, description, target, deadline, image).send({ from: localStorage.getItem(ACCOUNT) }).then((result) => {
+        window.location.href = "/";
+      });
+    }
+
+    // Handle submit
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      $("#description").val(quill.root.innerHTML);
+      const form = event.target;
+      const formData = new FormData(form);
+      const project = {};
+      formData.forEach(function (value, key) {
+        project[key] = value;
+      });
+
+      // validate data
+      if(!project['title']) {
+        $("#toast-body").html("Title can not be empty!");
+        toastBootstrap.show();
+        return;
+      }
+
+      if(!project['target']) {
+        $("#toast-body").html("Target can not be empty!");
+        toastBootstrap.show();
+        return;
+      }
+
+      if(!project['deadline']) {
+        $("#toast-body").html("Deadline can not be empty!");
+        toastBootstrap.show();
+        return;
+      }
+
+      if(new Date(project['deadline']) <= new Date()) {
+        $("#toast-body").html("The deadline should be a date in the future.!");
+        toastBootstrap.show();
+        return;
+      }
+      if(!project['projectImage'] || !isValidUrl(project['projectImage'])) {
+        $("#toast-body").html("Invalid image url!");
+        toastBootstrap.show();
+        return;
       }
 
 
-      // Handle submit
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        $("#description").val(quill.root.innerHTML);
-        const form = event.target;
-        const formData = new FormData(form);
-        const project = {};
-        formData.forEach(function (value, key) {
-          project[key] = value;
-        });
 
-        // validate data
-        if(!project['title']) {
-          $("#toast-body").html("Title can not be empty!");
-          toastBootstrap.show();
-          return;
-        }
-
-        if(!project['target']) {
-          $("#toast-body").html("Target can not be empty!");
-          toastBootstrap.show();
-          return;
-        }
-
-        if(!project['deadline']) {
-          $("#toast-body").html("Deadline can not be empty!");
-          toastBootstrap.show();
-          return;
-        }
-
-        if(new Date(project['deadline']) <= new Date()) {
-          $("#toast-body").html("The deadline should be a date in the future.!");
-          toastBootstrap.show();
-          return;
-        }
-        if(!project['image'] || !isValidUrl(project['image'])) {
-          $("#toast-body").html("Invalid image url!");
-          toastBootstrap.show();
-          return;
-        }
-
-
-
-        if (!localStorage.getItem('account')) {
-          $("#toast-body").html("Please connect your wallet first");
-          toastBootstrap.show();
-          return;
-        }
-        createProject(project['title'], project['description'], project['target'] * 1000000000000000000, new Date(project['deadline']).getTime(), project['image']);
-
+      if (!localStorage.getItem('account')) {
+        $("#toast-body").html("Please connect your wallet first");
+        toastBootstrap.show();
+        return;
       }
+      createProject(project['title'], project['description'], project['target'] * 1000000000000000000, new Date(project['deadline']).getTime(), project['projectImage']);
 
-      $(async function () {
+    }
+
+    $(async function(){
         //Connect to contract
         await connectContract();
-
-
-      })
+        
+    })
 
   </script>
