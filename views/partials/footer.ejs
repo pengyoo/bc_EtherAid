@@ -68,8 +68,8 @@
   $("#connectBtn").click(async () => {
     if (window.ethereum) {
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      localStorage.setItem(ACCOUNTS, JSON.stringify(accounts));
-      localStorage.setItem(ACCOUNT, accounts[0]);
+      sessionStorage.setItem(ACCOUNTS, JSON.stringify(accounts));
+      sessionStorage.setItem(ACCOUNT, accounts[0]);
       $("#activeAccount").text(accounts[0].substring(accounts[0].length - 3).toUpperCase());
       
       // Display accounts
@@ -87,221 +87,12 @@
 
   // Switch Account
   const switchAccount = (account) => {
-    localStorage.setItem(ACCOUNT, account);
+    sessionStorage.setItem(ACCOUNT, account);
     $("#activeAccount").text(account.substring(account.length - 3).toUpperCase());
   }
   // Connect to contract
   const connectContract = async () => {
-
-    // Original smart contract
-    // const ABI = [
-    //   {
-    //     "inputs": [
-    //       {
-    //         "internalType": "address",
-    //         "name": "_owner",
-    //         "type": "address"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "_title",
-    //         "type": "string"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "_description",
-    //         "type": "string"
-    //       },
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "_target",
-    //         "type": "uint256"
-    //       },
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "_deadline",
-    //         "type": "uint256"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "_image",
-    //         "type": "string"
-    //       }
-    //     ],
-    //     "name": "create",
-    //     "outputs": [
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "",
-    //         "type": "uint256"
-    //       }
-    //     ],
-    //     "stateMutability": "nonpayable",
-    //     "type": "function"
-    //   },
-    //   {
-    //     "inputs": [
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "_id",
-    //         "type": "uint256"
-    //       }
-    //     ],
-    //     "name": "donate",
-    //     "outputs": [],
-    //     "stateMutability": "payable",
-    //     "type": "function"
-    //   },
-    //   {
-    //     "inputs": [
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "_id",
-    //         "type": "uint256"
-    //       }
-    //     ],
-    //     "name": "getDonators",
-    //     "outputs": [
-    //       {
-    //         "internalType": "address[]",
-    //         "name": "",
-    //         "type": "address[]"
-    //       },
-    //       {
-    //         "internalType": "uint256[]",
-    //         "name": "",
-    //         "type": "uint256[]"
-    //       }
-    //     ],
-    //     "stateMutability": "view",
-    //     "type": "function"
-    //   },
-    //   {
-    //     "inputs": [],
-    //     "name": "getProjects",
-    //     "outputs": [
-    //       {
-    //         "components": [
-    //           {
-    //             "internalType": "address",
-    //             "name": "owner",
-    //             "type": "address"
-    //           },
-    //           {
-    //             "internalType": "string",
-    //             "name": "title",
-    //             "type": "string"
-    //           },
-    //           {
-    //             "internalType": "string",
-    //             "name": "description",
-    //             "type": "string"
-    //           },
-    //           {
-    //             "internalType": "uint256",
-    //             "name": "target",
-    //             "type": "uint256"
-    //           },
-    //           {
-    //             "internalType": "uint256",
-    //             "name": "deadline",
-    //             "type": "uint256"
-    //           },
-    //           {
-    //             "internalType": "uint256",
-    //             "name": "collected",
-    //             "type": "uint256"
-    //           },
-    //           {
-    //             "internalType": "string",
-    //             "name": "image",
-    //             "type": "string"
-    //           },
-    //           {
-    //             "internalType": "address[]",
-    //             "name": "donators",
-    //             "type": "address[]"
-    //           },
-    //           {
-    //             "internalType": "uint256[]",
-    //             "name": "donations",
-    //             "type": "uint256[]"
-    //           }
-    //         ],
-    //         "internalType": "struct CrowdFunding.Project[]",
-    //         "name": "",
-    //         "type": "tuple[]"
-    //       }
-    //     ],
-    //     "stateMutability": "view",
-    //     "type": "function"
-    //   },
-    //   {
-    //     "inputs": [],
-    //     "name": "numberOfProjects",
-    //     "outputs": [
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "",
-    //         "type": "uint256"
-    //       }
-    //     ],
-    //     "stateMutability": "view",
-    //     "type": "function"
-    //   },
-    //   {
-    //     "inputs": [
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "",
-    //         "type": "uint256"
-    //       }
-    //     ],
-    //     "name": "projects",
-    //     "outputs": [
-    //       {
-    //         "internalType": "address",
-    //         "name": "owner",
-    //         "type": "address"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "title",
-    //         "type": "string"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "description",
-    //         "type": "string"
-    //       },
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "target",
-    //         "type": "uint256"
-    //       },
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "deadline",
-    //         "type": "uint256"
-    //       },
-    //       {
-    //         "internalType": "uint256",
-    //         "name": "collected",
-    //         "type": "uint256"
-    //       },
-    //       {
-    //         "internalType": "string",
-    //         "name": "image",
-    //         "type": "string"
-    //       }
-    //     ],
-    //     "stateMutability": "view",
-    //     "type": "function"
-    //   }
-    // ];
-    // const Address = "0x3c45575560E196Fa12fe4Bf39d42DbeaC1aaDEaE";
-
-    // Final smart contract
+    // Smart contract ABI and Address
     const ABI = [
 	{
 		"inputs": [
@@ -504,8 +295,10 @@
 ];
     const Address = '0x0865651FBfDF6228C9F4553f95778a0Cb75A8d9d';
 
+    // If MetaMask installed
     if(window.ethereum) {
       window.web3 = await new Web3(window.ethereum);
+      
     } else {
       // if a user doesn't install MetaMask, use alchemy provider
       const alchemyApiKey = 'erzlaDNMdBp4UwWxOsc6mwNAmTpPH-by';
@@ -525,15 +318,15 @@
 
   // Initilize
   $(async function () {
-    if (localStorage.getItem(ACCOUNTS) && localStorage.getItem(ACCOUNTS) != "undefined") {
+    if (sessionStorage.getItem(ACCOUNTS) && sessionStorage.getItem(ACCOUNTS) != "undefined") {
       // Display accounts
-      const accounts = JSON.parse(localStorage.getItem(ACCOUNTS));
+      const accounts = JSON.parse(sessionStorage.getItem(ACCOUNTS));
       for(i=0; i<accounts.length; i++) {
         const a = accounts[i]
         $("#wallet").append(`<li><a role="button" onclick="switchAccount('${a}')" class="dropdown-item" href="#">${accounts[i]}</a></li>`)
       }
-      $("#activeAccount").text(localStorage.getItem(ACCOUNT).substring(localStorage.getItem(ACCOUNT).length - 3).toUpperCase());
-      // $("#wallet").html(`User Account: ${localStorage.getItem(ACCOUNT)}`);
+      $("#activeAccount").text(sessionStorage.getItem(ACCOUNT).substring(sessionStorage.getItem(ACCOUNT).length - 3).toUpperCase());
+      // $("#wallet").html(`User Account: ${sessionStorage.getItem(ACCOUNT)}`);
       $("#connectBtn").hide();
       $("#avatar").show(); 
     } else {

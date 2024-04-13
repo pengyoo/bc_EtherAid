@@ -46,15 +46,19 @@
 
       // fund eth through blockchain
       const fund = (value) => {
-        window.contract.methods.donate(<%- id %>).send({ from: localStorage.getItem(ACCOUNT), value: value }).then(result => {
-          $("#value").val(null);
-          $("#toast-body").html("Funded successfully! Thank you!");
-          toastBootstrap.show();
-        });
+        window.contract.methods
+                  .donate(<%- id %>)
+                  .send({ from: sessionStorage.getItem(ACCOUNT), value: value }).then(result => {
+                    $("#value").val(null);
+                    $("#toast-body").html("Funded successfully! Thank you!");
+                    toastBootstrap.show();
+                    getDonations();
+                  });
 		  }
 
       // get donations eth through blockchain
       const getDonations = () => {
+        $("#donations_card").html("");
         window.contract.methods.getDonators(<%- id %>).call().then(result => {
           donators = result[0];
           donations = result[1];
@@ -75,7 +79,7 @@
 		  }
 
       const displayProject = (id) => {
-        projects = JSON.parse(localStorage.getItem(PROJECTS));
+        projects = JSON.parse(sessionStorage.getItem(PROJECTS));
         for (i = 0; i < projects.length; i++) {
           if (i == id) {
             project_html = `
@@ -112,7 +116,7 @@
       // Handle Fund
       const handleFund = (event) => {
         event.preventDefault();
-        if(!localStorage.getItem(ACCOUNT)){
+        if(!sessionStorage.getItem(ACCOUNT)){
           $("#toast-body").html("Please connect to your wallet first!");
           toastBootstrap.show();
           return;
@@ -125,6 +129,7 @@
         }
         fund(value);
       }
+
       $(async function () {
         //Connect to contract
         await connectContract();

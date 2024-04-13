@@ -47,7 +47,7 @@
         </div>
 
         <input type="hidden" class="form-control" id="projectImage" name="projectImage" placeholder="" required>
-        <button class="btn btn-primary w-100 py-2 my-3" type="submit">Create</button>
+        <button id="submitBtn" class="btn btn-primary w-100 py-2 my-3" type="submit">Create</button>
       </form>
       
     </main>
@@ -107,13 +107,16 @@
 
     // Create Project through smart contract
     const createProject = (title, description, target, deadline, image) => {
-      const data = window.contract.methods.create(title, description, target, deadline, image).send({ from: localStorage.getItem(ACCOUNT) }).then((result) => {
-        window.location.href = "/";
-      });
+      const data = window.contract.methods
+                            .create(title, description, target, deadline, image)
+                            .send({ from: sessionStorage.getItem(ACCOUNT) }).then((result) => {
+                              window.location.href = "/";
+                            });
     }
 
     // Handle submit
     const handleSubmit = (event) => {
+
       event.preventDefault();
       $("#description").val(quill.root.innerHTML);
       const form = event.target;
@@ -155,11 +158,17 @@
 
 
 
-      if (!localStorage.getItem('account')) {
+      if (!sessionStorage.getItem('account')) {
         $("#toast-body").html("Please connect your wallet first");
         toastBootstrap.show();
         return;
       }
+
+      //Disable submit button
+      $("#submitBtn").attr('disabled', 'disabled');
+      $("#submitBtn").html(`<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">Creating...</span>`);
+      
+      // Create Project
       createProject(project['title'], project['description'], project['target'] * 1000000000000000000, new Date(project['deadline']).getTime(), project['projectImage']);
 
     }
